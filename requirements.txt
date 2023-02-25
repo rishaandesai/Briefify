@@ -1,1 +1,3 @@
 Flask==2.2.2
+newspaper3k==0.2.8
+transformers==4.6.1
