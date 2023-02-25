@@ -1,12 +1,8 @@
 from flask import Flask, request
-from newspaper import Article
 from transformers import PegasusTokenizer, pipeline
+from summarizer import read_article
 
-def read_article(url):
-    article = Article(url)
-    article.download()
-    article.parse()
-    return article.text
+app = Flask(__name__)
 
 # Pick model
 model_name = "google/pegasus-xsum"
@@ -21,8 +17,6 @@ summarizer = pipeline(
     tokenizer=pegasus_tokenizer, 
     framework="pt"
 )
-
-app = Flask(__name__)
 
 @app.route('/')
 def index():
