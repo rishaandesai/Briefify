@@ -30,18 +30,27 @@ function summarizeText(input) {
     var date = new Date(data.date);
     date = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     summaryText.innerHTML = 'Summary: ' + data.summary;
-    summaryTitle.innerHTML = data.title;
-    summaryDate.innerHTML = date;
-
-    const authors = data.authors.join(", ").replace(/,(?!.*,)/gmi, " and");
-    summaryAuthors.innerHTML = 'by' + authors;
-
-    if(data.authors.length === 0) {
+    
+    // Check the input type and hide the corresponding elements if inputType is "text"
+    if (inputType.value === "text") {
+      summaryTitle.style.display = "none";
+      summaryDate.style.display = "none";
       summaryAuthors.style.display = "none";
-    }
+      wordCountText.style.display = "none";
+    } else {
+      summaryTitle.innerHTML = data.title;
+      summaryDate.innerHTML = date;
+      const authors = data.authors.join(", ").replace(/,(?!.*,)/gmi, " and");
+      summaryAuthors.innerHTML = 'by' + authors;
 
-    const wordCount = data.summary.split(/\s+/).length;
-    wordCountText.innerHTML = "Word count: " + wordCount;
+      if(data.authors.length === 0) {
+        summaryAuthors.style.display = "none";
+      }
+
+      const wordCount = data.summary.split(/\s+/).length;
+      wordCountText.innerHTML = "Word count: " + wordCount;
+    }
+    
     progressBar.style.width = `${100}%`;
   })
   .catch((error) => {
