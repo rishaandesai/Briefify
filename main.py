@@ -27,7 +27,7 @@ def index():
 def summarize():
     url = request.args.get('url')
     text = read_article(url)
-    summary = summarizer(text, min_length=len(text)//2 if len(text) < 200 else 100, max_length=float("inf"))
+    summary = summarizer(text, min_length=0, max_length=float("inf"))
     print("Done")
 
     # Create a dictionary to hold the summary text
