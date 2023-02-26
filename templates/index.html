@@ -90,7 +90,7 @@
       <form class="max-w-lg mx-auto mt-8 flex flex-col">
         <label for="input-text" class="text-lg mb-2">Enter URL to Summarize:</label>
         <div class="relative mt-1 rounded-md shadow-sm">
-          <input type="url" id="input-text" name="input-text" class="px-4 py-2 rounded-md border-gray-400 border-2 mb-4 block w-full rounded-md border-gray-300 pl-2 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter URL" />
+          <input type="url" id="input-text" name="input-text" class="box-border h-100 w-100 px-4 py-2 rounded-md border-gray-400 border-2 mb-4 block w-full rounded-md border-gray-300 pl-2 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter URL" />
           <div class="absolute inset-y-5 right-0 flex items-center" style="padding-bottom: 1rem;">
              <div class="loading hidden z-10 -ml-10" id="spinner" role="status"><span></span><span></span><span></span></div>
           </div>
@@ -131,12 +131,24 @@ form.addEventListener('submit', async (event) => {
 
   // Set up a timer to increment the progress bar every few milliseconds
   let progress = 0;
-  let max = Math.random() * 0.5 + 72;
+  let max = Math.random() * 10 + 72;
   const timerId = setInterval(() => {
     // Increment the progress bar width by a random amount between 0 and 2%
-    progress += Math.random() * 2;
+    progress += Math.random();
     progressBar.style.width = `${Math.min(progress, max)}%`;
     document.getElementsByClassName('progresstext')[0].innerHTML = `${Math.min(progress, max).toFixed(2)}%`;
+    if(progress<=25){
+      progressBar.style.backgroundColor = "red";
+    }
+    else if(progress<=50){
+      progressBar.style.backgroundColor = "orange";
+    }
+    else if(progress<=75){
+      progressBar.style.backgroundColor = "yellow";
+    }
+    else{
+      progressBar.style.backgroundColor = "green";
+    }
   }, 300);
 
   const response = await fetch(`/summarize?url=${encodeURIComponent(text)}`, {
