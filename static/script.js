@@ -10,6 +10,8 @@ const textLink = document.querySelector("#text-link");
 
 const summaryText = document.querySelector("#summary-text");
 const summaryTitle = document.querySelector("#summary-title");
+const summaryDate = document.querySelector("#summary-date");
+const summaryAuthors = document.querySelector("#summary-author");
 
 let fetchUrl = "/summarize";
 
@@ -22,7 +24,32 @@ function summarizeText(input) {
   fetch(fetchUrl + "?url=" + input, {
     method: "GET",
   })
+  .then((response) => response.json())
+  .then((data) => {
+    clearInterval(timerId); // clear the interval when the fetch request is successful
+    var date = new Date(data.date);
+    date = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    summaryText.innerHTML = 'Summary: ' + data.summary;
+    summaryTitle.innerHTML = data.title;
+    summaryDate.innerHTML = date;
+
+    const authors = data.authors.join(", ").replace(/,(?!.*,)/gmi, " and");
+    summaryAuthors.innerHTML = 'by' + authors;
+
+    if(data.authors.length === 0) {
+      summaryAuthors.style.display = "none";
+    }
+
+    const wordCount = data.summary.split(/\s+/).length;
+    wordCountText.innerHTML = "Word count: " + wordCount;
+    updateProgressBar(100);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
   let max = Math.random() * 10 + 72;
+  var progress = 0;
   const timerId = setInterval(() => {
     // Increment the progress bar width by a random amount between 0 and 4%
     progress += Math.random() * 4;
@@ -40,19 +67,7 @@ function summarizeText(input) {
    else{
      progressBar.style.backgroundColor = "green";
    }
- }, 300)
-    .then((response) => response.json())
-    .then((data) => {
-      summaryText.innerHTML = data.summary;
-      summaryTitle.innerHTML = data.title;
-      summaryTitle.style.display = "block";
-
-      const wordCount = data.summary.split(/\s+/).length;
-      wordCountText.innerHTML = "Word count: " + wordCount;
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+ }, 300);
 }
 
 function handleFormSubmit(event) {

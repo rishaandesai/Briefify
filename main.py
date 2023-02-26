@@ -36,7 +36,7 @@ def index():
 @app.route('/summarize')
 def summarize():
     url = request.args.get('url')
-    text = read_article(url)["text"]
+    text, title, date, authors = read_article(url)["text"], read_article(url)["title"], read_article(url)["publish_date"], read_article(url)["authors"]
     if len(text) > 512:
         summary = summarizer(text, min_length=0, max_length=276)
     else:
@@ -47,7 +47,9 @@ def summarize():
     response_data = {
         'summary': summary[0]['summary_text'],
         'original': text,
-        'url': url }
+        'url': url,
+        'title': title,
+         'date': date }
 
     # Set the Content-Type header to application/json
     headers = {'Content-Type': 'application/json'}
