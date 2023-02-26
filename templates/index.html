@@ -68,7 +68,7 @@
   height: 100%;
   background-color: #32ff73;
   border-radius: 10px;
-  transition: width 1s ease-in-out;
+  transition: all 1s ease-in-out;
 }
 
 .progresstext{
@@ -133,8 +133,8 @@ form.addEventListener('submit', async (event) => {
   let progress = 0;
   let max = Math.random() * 10 + 72;
   const timerId = setInterval(() => {
-    // Increment the progress bar width by a random amount between 0 and 2%
-    progress += Math.random();
+    // Increment the progress bar width by a random amount between 0 and 4%
+    progress += Math.random() * 4;
     progressBar.style.width = `${Math.min(progress, max)}%`;
     document.getElementsByClassName('progresstext')[0].innerHTML = `${Math.min(progress, max).toFixed(2)}%`;
     if(progress<=25){
@@ -143,8 +143,8 @@ form.addEventListener('submit', async (event) => {
     else if(progress<=50){
       progressBar.style.backgroundColor = "orange";
     }
-    else if(progress<=75){
-      progressBar.style.backgroundColor = "yellow";
+    else if(progress<100){
+      progressBar.style.backgroundColor = "#f74231";
     }
     else{
       progressBar.style.backgroundColor = "green";
