@@ -1,83 +1,105 @@
-// Get a reference to the form and input elements
-const form = document.querySelector('form');
-const inputUrl = document.querySelector('#input-text');
+const progressBar = document.querySelector(".progress-bar");
+const progressText = document.querySelector(".progresstext");
+const inputText = document.querySelector("#input-text");
+const inputType = document.querySelector("#input-type");
+const summarizeForm = document.querySelector("#summarize-form");
+const summaryText = document.querySelector("#summary-text");
+const wordCountText = document.querySelector("#wordCountText");
+const copyButton = document.querySelector("#copy-button");
+const urlLink = document.querySelector("#url-link");
+const textLink = document.querySelector("#text-link");
 
-// Add an event listener for when the form is submitted
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const url = inputUrl.value.trim();
+let fetchUrl = "/summarize";
 
-  const progressBar = document.querySelector('.progress-bar');
-  progressBar.style.width = '0%'; // sspitart from 0%
+function changeInputToUrl() {
+  const urlLink = document.querySelector('#url-link');
+  const textLink = document.querySelector('#text-link');
+  const inputType = document.querySelector('#input-type');
+  const inputText = document.querySelector('#input-text');
+  
+  inputType.value = 'url';
+  inputText.placeholder = 'Enter a URL...';
+  document.querySelector('#summarize-form').action = '/summarize';
+  textLink.classList.remove('active');
+  urlLink.classList.add('active');
+  console.log('changed to url');
+}
 
-  // Set up a timer to increment the progress bar every few milliseconds
-  let progress = 0;
-  let max = Math.random() * 10 + 72;
-  const timerId = setInterval(() => {
-    // Increment the progress bar width by a random amount between 0 and 4%
-    progress += Math.random() * 5;
-    progressBar.style.width = `${Math.min(progress, max)}%`;
-    document.getElementsByClassName('progresstext')[0].innerHTML = `${Math.min(progress, max).toFixed(2)}%`;
-    if(progress<=25){
-      progressBar.style.backgroundColor = "red";
-    }
-    else if(progress<=50){
-      progressBar.style.backgroundColor = "orange";
-    }
-    else if(progress<100){
-      progressBar.style.backgroundColor = "#f74231";
-    }
-    else{
-      progressBar.style.backgroundColor = "green";
-    }
-  }, 300);
+function changeInputToText() {
+  const urlLink = document.querySelector('#url-link');
+  const textLink = document.querySelector('#text-link');
+  const inputType = document.querySelector('#input-type');
+  const inputText = document.querySelector('#input-text');
+  
+  inputType.value = 'text';
+  inputText.placeholder = 'Enter text to summarize...';
+  document.querySelector('#summarize-form').action = '/summarize-text';
+  urlLink.classList.remove('active');
+  textLink.classList.add('active');
+  console.log('changed to text');
+}
 
-  try {
-    const response = await fetch(`/summarize?url=${encodeURIComponent(url)}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+function updateProgressBar(percent) {
+  progressBar.style.width = percent + "%";
+  progressText.innerHTML = percent + "%";
+}
 
-    // Stop the timer and complete the progress bar animation
-    clearInterval(timerId);
-    progressBar.style.width = '100%';
-    progressBar.style.backgroundColor = "green";
-    document.getElementsByClassName('progresstext')[0].innerHTML = '100%';
-
-    if (response.ok) {
-      const data = await response.json();
-      const summary = data.summary;
-      console.log(summary)
-      const summaryText = document.getElementById('summary-text');
-      summaryText.textContent = summary;
-      progressBar.style.width = '0%';
-      progressBar.style.backgroundColor = "red";
-      document.getElementsByClassName('progresstext')[0].innerHTML = '0%';
-    } else {
-      const error = await response.text();
-      throw new Error(error);
-    }
-  } catch (error) {
-    let summaryText = document.getElementById('summary-text');
-    console.error('Error fetching summary:', error.message);
-    summaryText.textContent = `Error fetching summary: ${error.message}`;
-  }
-});
-
-document.getElementById('wordCountText').innerHTML = 'Word Count: ' + document.getElementById('summary-text').value.length;
-
-const copyButton = document.querySelector('#copy-button');
-const summaryText = document.querySelector('#summary-text');
-
-copyButton.addEventListener('click', () => {
-  navigator.clipboard.writeText(summaryText.textContent)
-    .then(() => {
-      console.log('Text copied to clipboard');
-      // Do something to indicate that the text was copied
+function summarizeText(input) {
+  fetch(fetchUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ input: input }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      summaryText.innerHTML = data.summary;
+      wordCountText.innerHTML = "Word count: " + data.word_count;
     })
-    .catch(err => {
-      console.error('Error copying text to clipboard:', err);
+    .catch((error) => {
+      console.error("Error:", error);
     });
-});
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+  const input = inputText.value.trim();
+
+  if (input) {
+    summarizeText(input);
+  } else {
+    alert("Please enter some text to summarize.");
+  }
+}
+
+function handleCopyButtonClick(event) {
+  event.preventDefault();
+  const textToCopy = summaryText.innerText;
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    alert("Copied to clipboard!");
+  });
+}
+
+function handleInputTextFocus() {
+  if (inputText.value === "") {
+    inputText.placeholder = "";
+  }
+}
+
+function handleInputTextBlur() {
+  if (inputText.value === "") {
+    if (inputType.value === "url") {
+      inputText.placeholder = "Enter a URL...";
+    } else {
+      inputText.placeholder = "Enter text to summarize...";
+    }
+  }
+}
+
+summarizeForm.addEventListener("submit", handleFormSubmit);
+copyButton.addEventListener("click", handleCopyButtonClick);
+inputText.addEventListener("focus", handleInputTextFocus);
+inputText.addEventListener("blur", handleInputTextBlur);
+urlLink.addEventListener("click", changeInputToUrl);
+textLink.addEventListener("click", changeInputToText);

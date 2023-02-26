@@ -4,4 +4,9 @@ def read_article(url):
     article = Article(url)
     article.download()
     article.parse()
-    return article.text
+    return {
+        "text": article.text,
+        "title": article.title,
+        "authors": article.authors,
+        "publish_date": article.publish_date
+    }

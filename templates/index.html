@@ -5,8 +5,12 @@
    <body>
       <div class="pagination-container">
          <ul class="pagination">
-            <li><a href="#" id="url-link">URL</a></li>
-            <li><a href="#" id="text-link">Text</a></li>
+            <li>
+               <a href="#" id="url-link" class="active">URL</a>
+            </li>
+            <li>
+               <a href="#" id="text-link">Text</a>
+            </li>
          </ul>
          <div class="progress-bar-container">
             <div class="progress-bar">
@@ -20,7 +24,7 @@
               <form id="summarize-form">
                <input type="hidden" id="input-type" value="url" />
                <textarea placeholder="Enter a URL..." style="resize: none;" form="summarize-form" id="input-text"></textarea>
-               <button class="submit-button" type="submit" value="Summarize">Summarize</button>
+               <button class="submit-button" id="submit-button" type="submit" value="Summarize">Summarize</button>
               </form>
             </div>
          </div>
@@ -36,3 +40,4 @@
       </div>
    </body>
    <script src="../static/script.js"></script>
+</html>

@@ -1,6 +1,17 @@
 from flask import Flask, request, render_template, jsonify
 from transformers import PegasusTokenizer, pipeline
-from summarizer import read_article
+from newspaper import Article
+
+def read_article(url):
+    article = Article(url)
+    article.download()
+    article.parse()
+    return {
+        "text": article.text,
+        "title": article.title,
+        "authors": article.authors,
+        "publish_date": article.publish_date
+    }
 
 app = Flask(__name__)
 
@@ -25,7 +36,7 @@ def index():
 @app.route('/summarize')
 def summarize():
     url = request.args.get('url')
-    text = read_article(url)
+    text = read_article(url)["text"]
     if len(text) > 512:
         summary = summarizer(text, min_length=0, max_length=276)
     else:
@@ -33,7 +44,10 @@ def summarize():
     print("Done")
 
     # Create a dictionary to hold the summary text
-    response_data = {'summary': summary[0]['summary_text']}
+    response_data = {
+        'summary': summary[0]['summary_text'],
+        'original': text,
+        'url': url }
 
     # Set the Content-Type header to application/json
     headers = {'Content-Type': 'application/json'}
@@ -49,7 +63,8 @@ def summarizetext():
     print("Done")
 
     # Create a dictionary to hold the summary text
-    response_data = {'summary': summary[0]['summary_text']}
+    response_data = {
+        'summary': summary[0]['summary_text'], 'original': text }
 
     # Set the Content-Type header to application/json
     headers = {'Content-Type': 'application/json'}
