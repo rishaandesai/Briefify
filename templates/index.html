@@ -134,7 +134,7 @@ form.addEventListener('submit', async (event) => {
   let max = Math.random() * 0.5 + 72;
   const timerId = setInterval(() => {
     // Increment the progress bar width by a random amount between 0 and 2%
-    progress += Math.random() * 5;
+    progress += Math.random() * 2;
     progressBar.style.width = `${Math.min(progress, max)}%`;
     document.getElementsByClassName('progresstext')[0].innerHTML = `${Math.min(progress, max).toFixed(2)}%`;
   }, 300);
