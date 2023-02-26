@@ -44,6 +44,7 @@ def summarize():
 @app.route('/summarizetext')
 def summarizetext():
     text = request.args.get('text')
+
     summary = summarizer(text, min_length=0, max_length=276)
     print("Done")
 
