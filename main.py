@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, jsonify
 from transformers import PegasusTokenizer, pipeline
 from newspaper import Article
-
+# Making a function to deal with urls
 def read_article(url):
     article = Article(url)
     article.download()
@@ -12,31 +12,34 @@ def read_article(url):
         "authors": article.authors,
         "publish_date": article.publish_date
     }
-
+# Creating flask app
 app = Flask(__name__)
 
-# Pick model
+# Picking the pegasus model
 model_name = "google/pegasus-xsum"
 
-# Load pretrained tokenizer
+# Loading pretrained tokenizer
 pegasus_tokenizer = PegasusTokenizer.from_pretrained(model_name)
 
-# Define summarization pipeline 
+# Defining summarization pipeline 
 summarizer = pipeline(
     "summarization", 
     model=model_name, 
     tokenizer=pegasus_tokenizer, 
     framework="pt"
 )
-
+# Rendering template
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/summarize')
+# Summarize function for URLs
 def summarize():
     url = request.args.get('url')
+    #Using Newspaper library to get text, title, publish date, and author(s)
     text, title, date, authors = read_article(url)["text"], read_article(url)["title"], read_article(url)["publish_date"], read_article(url)["authors"]
+    #Adjusting summary length based on length of text
     if len(text) > 512:
         summary = summarizer(text, min_length=0, max_length=276)
     else:

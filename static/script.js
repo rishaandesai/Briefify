@@ -42,7 +42,7 @@ function summarizeText(input) {
 
     const wordCount = data.summary.split(/\s+/).length;
     wordCountText.innerHTML = "Word count: " + wordCount;
-    updateProgressBar(100);
+    progressBar.style.width = `${100}%`;
   })
   .catch((error) => {
     console.error("Error:", error);
