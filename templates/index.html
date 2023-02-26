@@ -75,8 +75,8 @@
   top:50%;
   right:5px;
   transform: translateY(-50%); 
-  font:bold 14px 'Quicksand', sans-serif;
-  color:#ffffff;
+  font: 14px 'Quicksand', sans-serif;
+  color: black;
 }
 
 </style>
@@ -98,8 +98,9 @@
 
       <div class="progress-bar-container">
         <div class="progress-bar">
-          <span class="progresstext">0%</span>
+          
         </div>
+        <span class="progresstext">0%</span>
       </div>      
 
       <div id="output-summary" class="max-w-lg mx-auto mt-8">
@@ -131,10 +132,10 @@ form.addEventListener('submit', async (event) => {
   let max = Math.random() * 0.5 + 72;
   const timerId = setInterval(() => {
     // Increment the progress bar width by a random amount between 0 and 2%
-    progress += Math.random() * 1;
-    // progress, a random number between 68 and 82
+    progress += Math.random() * 5;
     progressBar.style.width = `${Math.min(progress, max)}%`;
-  }, 50);
+    document.getElementsByClassName('progresstext')[0].innerHTML = `${Math.min(progress, max).toFixed(2)}%`;
+  }, 300);
 
   const response = await fetch(`/summarize?url=${encodeURIComponent(text)}`, {
     method: 'GET',
@@ -146,6 +147,7 @@ form.addEventListener('submit', async (event) => {
   // Stop the timer and complete the progress bar animation
   clearInterval(timerId);
   progressBar.style.width = '100%';
+  document.getElementsByClassName('progresstext')[0].innerHTML = '100%';
   
   spinner.style.display = 'none'; // Hide spinner
 
