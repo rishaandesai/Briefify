@@ -1,0 +1,159 @@
+.container {
+	display: flex;
+	flex-direction: row;
+	height: 93%;
+  }
+  
+  .pagination-container {
+	display: flex;
+	justify-content: flex-end; /* changed from "right" to "flex-end" */
+	align-items: center; /* added this to vertically center the content */
+	padding: 10px 0;
+  }
+  
+  .pagination a {
+	display: block;
+	padding: 6px 12px;
+	color: #333;
+	border: 1px solid #ccc;
+	text-decoration: none;
+	font-size: 16px;
+	transition: background-color .3s;
+	float: left;
+  }
+  
+  .pagination a:hover {
+	background-color: #f2f2f2;
+  }
+
+  .pagination {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+  }
+  
+  .pagination a.active {
+	background-color: #4CAF50;
+	color: white;
+	border: 1px solid #4CAF50;
+  }
+  
+  .pagination a:hover:not(.active) {background-color: #ddd;}
+  
+  .input-container {
+	flex: 1;
+	position: relative;
+	align-self: flex-end;
+  }
+  
+  textarea {
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+	margin: 0;
+  }
+
+  textarea:focus {
+	outline: none;
+  }
+  
+  .submit-button {
+	padding: 8px 16px;
+	background-color: #1f2937;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	position: absolute;
+  	bottom: 10px;
+  	right: 10px;
+  }
+  
+  .right-pane {
+	flex: 1;
+	height: 100%;
+	background-color: #f2f2f2;
+  }
+  
+  .left-pane {
+	flex: 1;
+	height: 100%;
+	display: block;
+  }
+  
+  p, span {
+	font-family: 'Quicksand', sans-serif;
+  }
+
+  .right-pane p {
+	margin-left: 10px;
+  }
+  
+  .progress-bar-container {
+	position: relative;
+	width: 400px;
+	height: 20px;
+	background-color: #f2f2f2;
+	border-radius: 10px;
+	text-align: center;
+	overflow: hidden; /* removed duplicate "position: relative;" */
+	margin-left: auto;
+  }
+  
+  .progress-bar {
+	position: absolute;
+	top: 0; /* added this to fix alignment */
+	left: 0; /* added this to fix alignment */
+	height: 100%;
+	background-color: #32ff73;
+	border-radius: 10px;
+	transition: all 1s ease-in-out;
+  }
+  
+  .progresstext {
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	transform: translateY(-50%);
+	font: 14px 'Quicksand', sans-serif;
+	color: black;
+  }
+  
+  /* added this to set box-sizing to border-box globally */
+  * {
+	box-sizing: border-box;
+	font-family: 'Quicksand', sans-serif !important;
+  }
+  
+  #copy-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	z-index: 1;
+	background: none;
+	border: none;
+	cursor: pointer;
+  }
+  
+  #copy-button svg {
+	fill: #1f2937;
+	height: 30px;
+	width: 30px;
+	color: #333;
+	border: 1px solid #ccc;
+	padding: 4px;
+	border-radius: 4px;
+	font-size: 16px;
+  }  
+
+  #wordCountText {
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	z-index: 1;
+  }

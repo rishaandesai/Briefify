@@ -26,7 +26,10 @@ def index():
 def summarize():
     url = request.args.get('url')
     text = read_article(url)
-    summary = summarizer(text, min_length=0, max_length=float("inf"))
+    if len(text) > 512:
+        summary = summarizer(text, min_length=0, max_length=276)
+    else:
+        summary = summarizer(text, min_length=0, max_length=float('inf'))
     print("Done")
 
     # Create a dictionary to hold the summary text
@@ -41,7 +44,7 @@ def summarize():
 @app.route('/summarizetext')
 def summarizetext():
     text = request.args.get('text')
-    summary = summarizer(text, min_length=0, max_length=float("inf"))
+    summary = summarizer(text, min_length=0, max_length=276)
     print("Done")
 
     # Create a dictionary to hold the summary text
