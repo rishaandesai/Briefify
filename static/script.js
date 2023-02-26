@@ -20,11 +20,30 @@ function summarizeText(input) {
   fetch(fetchUrl + "?url=" + input, {
     method: "GET",
   })
+  let max = Math.random() * 10 + 72;
+  const timerId = setInterval(() => {
+    // Increment the progress bar width by a random amount between 0 and 4%
+    progress += Math.random() * 4;
+    progress += Math.random() * 5;
+    progressBar.style.width = `${Math.min(progress, max)}%`;
+    document.getElementsByClassName('progresstext')[0].innerHTML = `${Math.min(progress, max).toFixed(2)}%`;
+    if(progress<=25){
+     progressBar.style.backgroundColor = "red";
+   }
+   else if(progress<=50){
+     progressBar.style.backgroundColor = "orange";
+   }
+   else if(progress<100){
+     progressBar.style.backgroundColor = "#f74231";
+   }
+   else{
+     progressBar.style.backgroundColor = "green";
+   }
+ }, 300)
     .then((response) => response.json())
     .then((data) => {
       summaryText.innerHTML = data.summary;
-      const wordCount = data.summary.split(/\s+/).length;
-      wordCountText.innerHTML = "Word count: " + wordCount;
+      wordCountText.innerHTML = "Word count: " + data.word_count;
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -37,6 +56,7 @@ function handleFormSubmit(event) {
 
   if (input) {
     summarizeText(input);
+
   } else {
     alert("Please enter some text to summarize.");
   }
