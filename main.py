@@ -34,26 +34,38 @@ def index():
     return render_template('index.html')
 
 @app.route('/summarize')
-# Summarize function for URLs
 def summarize():
-    #Using Newspaper library to get text, title, publish date, and author(s)
+    # Using Newspaper library to get text, title, publish date, and author(s)
     url = request.args.get('url')
     article = read_article(url)
     text, title, date, authors = article["text"], article["title"], article["publish_date"], article["authors"]
-    if len(text) > 512:
-        summary = summarizer(text, min_length=0, max_length=276)
-    else:
-        summary = summarizer(text, min_length=0, max_length=float('inf'))
-    print("Done")
+
+    # Split the text into chunks of appropriate length
+    max_length = 512
+    stride = 256
+    chunks = []
+    for i in range(0, len(text), stride):
+        chunk = text[i:i+max_length]
+        chunks.append(chunk)
+
+    # Summarize each chunk separately
+    summaries = []
+    for chunk in chunks:
+        summary = summarizer(chunk, min_length=0, max_length=276)
+        summaries.append(summary[0]['summary_text'])
+
+    # Concatenate the summary texts
+    summary_text = ' '.join(summaries)
 
     # Create a dictionary to hold the summary text
     response_data = {
-        'summary': summary[0]['summary_text'],
+        'summary': summary_text,
         'original': text,
         'url': url,
         'title': title,
-         'date': date,
-          'authors': authors }
+        'date': date,
+        'authors': authors
+    }
 
     # Set the Content-Type header to application/json
     headers = {'Content-Type': 'application/json'}
