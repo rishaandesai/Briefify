@@ -11,46 +11,14 @@ const textLink = document.querySelector("#text-link");
 
 let fetchUrl = "/summarize";
 
-function changeInputToUrl() {
-  const urlLink = document.querySelector('#url-link');
-  const textLink = document.querySelector('#text-link');
-  const inputType = document.querySelector('#input-type');
-  const inputText = document.querySelector('#input-text');
-  
-  inputType.value = 'url';
-  inputText.placeholder = 'Enter a URL...';
-  document.querySelector('#summarize-form').action = '/summarize';
-  textLink.classList.remove('active');
-  urlLink.classList.add('active');
-  console.log('changed to url');
-}
-
-function changeInputToText() {
-  const urlLink = document.querySelector('#url-link');
-  const textLink = document.querySelector('#text-link');
-  const inputType = document.querySelector('#input-type');
-  const inputText = document.querySelector('#input-text');
-  
-  inputType.value = 'text';
-  inputText.placeholder = 'Enter text to summarize...';
-  document.querySelector('#summarize-form').action = '/summarize-text';
-  urlLink.classList.remove('active');
-  textLink.classList.add('active');
-  console.log('changed to text');
-}
-
 function updateProgressBar(percent) {
   progressBar.style.width = percent + "%";
   progressText.innerHTML = percent + "%";
 }
 
 function summarizeText(input) {
-  fetch(fetchUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ input: input }),
+  fetch(fetchUrl + "?url=" + input, {
+    method: "GET",
   })
     .then((response) => response.json())
     .then((data) => {
@@ -71,6 +39,36 @@ function handleFormSubmit(event) {
   } else {
     alert("Please enter some text to summarize.");
   }
+}
+
+function handleUrlLinkClick(event) {
+  event.preventDefault();
+  const urlLink = document.querySelector('#url-link');
+  const textLink = document.querySelector('#text-link');
+  const inputType = document.querySelector('#input-type');
+  const inputText = document.querySelector('#input-text');
+  
+  inputType.value = 'url';
+  inputText.placeholder = 'Enter a URL...';
+  document.querySelector('#summarize-form').action = '/summarize';
+  textLink.classList.remove('active');
+  urlLink.classList.add('active');
+  fetchUrl = "/summarize";
+}
+
+function handleTextLinkClick(event) {
+  event.preventDefault();
+  const urlLink = document.querySelector('#url-link');
+  const textLink = document.querySelector('#text-link');
+  const inputType = document.querySelector('#input-type');
+  const inputText = document.querySelector('#input-text');
+
+  inputType.value = 'text';
+  inputText.placeholder = 'Enter text to summarize...';
+  document.querySelector('#summarize-form').action = '/summarizetext';
+  urlLink.classList.remove('active');
+  textLink.classList.add('active');
+  fetchUrl = "/summarizetext";
 }
 
 function handleCopyButtonClick(event) {
@@ -98,8 +96,8 @@ function handleInputTextBlur() {
 }
 
 summarizeForm.addEventListener("submit", handleFormSubmit);
+urlLink.addEventListener("click", handleUrlLinkClick);
+textLink.addEventListener("click", handleTextLinkClick);
 copyButton.addEventListener("click", handleCopyButtonClick);
 inputText.addEventListener("focus", handleInputTextFocus);
 inputText.addEventListener("blur", handleInputTextBlur);
-urlLink.addEventListener("click", changeInputToUrl);
-textLink.addEventListener("click", changeInputToText);
