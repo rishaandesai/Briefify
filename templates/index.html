@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        body {
+      font-family: Arial, sans-serif;
+    }
+    
+    header {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    form {
+      margin: 20px auto;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    label {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    
+    textarea {
+      height: 200px;
+      font-size: 1.2em;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      border: none;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+    
+    #output-summary {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    
+    #output-summary h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    
+    #summary-text {
+      font-size: 1.2em;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+      </style>
+  <head>
+    <meta charset="UTF-8">
+    <title>Summarization App</title>
+  </head>
+  <body>
+    <header>
+      <h1>Summarization App</h1>
+    </header>
+    <main>
+      <form>
+        <label for="input-text">Enter URL to Summarize:</label>
+        <input type="url" id="input-text" name="input-text"></input>
+        <button id="submit-btn">Summarize</button>
+      </form>
+      <div id="output-summary">
+        <h2>Summary:</h2>
+        <p id="summary-text"></p>
+      </div>
+    </main>
+  </body>
+  <script>
+    // Get a reference to the form and input elements
+const form = document.querySelector('form');
+const inputText = document.querySelector('#input-text');
+
+// Add an event listener for when the form is submitted
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  // Get the input text from the textarea
+  const text = inputText.value.trim();
+
+  // Make a request to the /summarize/ API route
+  const response = await fetch(`/summarize?url=${encodeURIComponent(text)}`);
+
+  // Check if the response was successful
+  if (response.ok) {
+    // Get the summary text from the response body
+    const data = await response.json();
+    const summary = data.summary;
+
+    // Display the summary text on the page
+    const summaryText = document.querySelector('#summary-text');
+    summaryText.textContent = summary;
+  } else {
+    console.error('Error fetching summary:', response.statusText);
+  }
+});
+
+  </script>
+</html>
