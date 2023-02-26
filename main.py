@@ -36,10 +36,10 @@ def index():
 @app.route('/summarize')
 # Summarize function for URLs
 def summarize():
-    url = request.args.get('url')
     #Using Newspaper library to get text, title, publish date, and author(s)
-    text, title, date, authors = read_article(url)["text"], read_article(url)["title"], read_article(url)["publish_date"], read_article(url)["authors"]
-    #Adjusting summary length based on length of text
+    url = request.args.get('url')
+    article = read_article(url)
+    text, title, date, authors = article["text"], article["title"], article["publish_date"], article["authors"]
     if len(text) > 512:
         summary = summarizer(text, min_length=0, max_length=276)
     else:
@@ -61,6 +61,7 @@ def summarize():
     return jsonify(response_data), 200, headers
 
 @app.route('/summarizetext')
+# Summarize function for URLs that are not articles
 def summarizetext():
     text = request.args.get('url')
 
@@ -76,6 +77,9 @@ def summarizetext():
 
     # Return the summary text as a JSON response
     return jsonify(response_data), 200, headers
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
