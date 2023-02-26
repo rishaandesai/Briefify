@@ -1,0 +1,49 @@
+<style>
+    .loading {
+    display: inline-block;
+    vertical-align: middle;
+    }
+
+    .loading span {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-right: 2px;
+    border-radius: 50%;
+    background-color: #333;
+    animation: loading 1s ease-in-out infinite;
+    transition: all 0.3s ease-in-out;
+    }
+
+    .loading span:nth-child(1) {
+    animation-delay: 0s;
+    }
+
+    .loading span:nth-child(2) {
+    animation-delay: 0.2s;
+    }
+
+    .loading span:nth-child(3) {
+    animation-delay: 0.4s;
+    }
+
+    @keyframes loading {
+    0% {
+        transform: scale(0.1);
+        opacity: 0.7;
+    }
+    33.33% {
+        opacity: 0.3;
+    }
+    66.66% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(0.1);
+        opacity: 0.7;
+    }
+}
+</style>
+
+<script src="https://cdn.tailwindcss.com"></script>
