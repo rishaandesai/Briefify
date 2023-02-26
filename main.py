@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from transformers import PegasusTokenizer, pipeline
 from summarizer import read_article
 import json
