@@ -23,7 +23,8 @@ function summarizeText(input) {
     .then((response) => response.json())
     .then((data) => {
       summaryText.innerHTML = data.summary;
-      wordCountText.innerHTML = "Word count: " + data.word_count;
+      const wordCount = data.summary.split(/\s+/).length;
+      wordCountText.innerHTML = "Word count: " + wordCount;
     })
     .catch((error) => {
       console.error("Error:", error);
