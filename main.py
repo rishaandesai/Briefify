@@ -39,5 +39,21 @@ def summarize():
     # Return the summary text as a JSON response
     return jsonify(response_data), 200, headers
 
+@app.route('/summarizetext')
+def summarizetext():
+    url = request.args.get('text')
+    text = url
+    summary = summarizer(text, min_length=0, max_length=float("inf"))
+    print("Done")
+
+    # Create a dictionary to hold the summary text
+    response_data = {'summary': summary[0]['summary_text']}
+
+    # Set the Content-Type header to application/json
+    headers = {'Content-Type': 'application/json'}
+
+    # Return the summary text as a JSON response
+    return jsonify(response_data), 200, headers
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

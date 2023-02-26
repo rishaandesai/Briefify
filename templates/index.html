@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Summarization App</title>
+    <title>Summarizer</title>
   </head>
   <style>
     .loading {
@@ -50,6 +50,35 @@
         opacity: 0.7;
     }
 }
+
+.progress-bar-container {
+  position: relative;
+  width: 400px;
+  height: 20px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  text-align:center;
+  position:relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  position: absolute;
+  height: 100%;
+  background-color: #32ff73;
+  border-radius: 10px;
+  transition: width 1s ease-in-out;
+}
+
+.progresstext{
+  position:absolute;
+  top:50%;
+  right:5px;
+  transform: translateY(-50%); 
+  font:bold 14px 'Quicksand', sans-serif;
+  color:#ffffff;
+}
+
 </style>
   <body class="font-sans">
     <header class="bg-gray-800 text-white text-center py-4">
@@ -66,6 +95,13 @@
        </div>
         <button id="submit-btn" class="bg-gray-800 text-white rounded-md py-2 text-lg hover:bg-gray-700 cursor-pointer">Summarize</button>
       </form>
+
+      <div class="progress-bar-container">
+        <div class="progress-bar">
+          <span class="progresstext">0%</span>
+        </div>
+      </div>      
+
       <div id="output-summary" class="max-w-lg mx-auto mt-8">
         <div id="output-summary" class="max-w-lg mx-auto mt-8">
           <h2 class="text-2xl mb-2">Summary:</h2>
@@ -76,7 +112,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   
   <script>
-    // Get a reference to the form and input elements
+// Get a reference to the form and input elements
 const form = document.querySelector('form');
 const inputText = document.querySelector('#input-text');
 
@@ -86,8 +122,33 @@ form.addEventListener('submit', async (event) => {
   const text = inputText.value.trim();
   const spinner = document.querySelector('.loading');
   spinner.style.display = 'inline-block'; // Show spinner
-  const response = await fetch(`/summarize?url=${encodeURIComponent(text)}`);
+
+  const progressBar = document.querySelector('.progress-bar');
+  progressBar.style.width = '0%'; // start from 0%
+
+  // Set up a timer to increment the progress bar every few milliseconds
+  let progress = 0;
+  let max = Math.random() * 0.5 + 72;
+  const timerId = setInterval(() => {
+    // Increment the progress bar width by a random amount between 0 and 2%
+    progress += Math.random() * 1;
+    // progress, a random number between 68 and 82
+    progressBar.style.width = `${Math.min(progress, max)}%`;
+  }, 50);
+
+  const response = await fetch(`/summarize?url=${encodeURIComponent(text)}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  // Stop the timer and complete the progress bar animation
+  clearInterval(timerId);
+  progressBar.style.width = '100%';
+  
   spinner.style.display = 'none'; // Hide spinner
+
   if (response.ok) {
     const data = await response.json();
     const summary = data.summary;
