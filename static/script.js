@@ -7,6 +7,7 @@ const wordCountText = document.querySelector("#wordCountText");
 const copyButton = document.querySelector("#copy-button");
 const urlLink = document.querySelector("#url-link");
 const textLink = document.querySelector("#text-link");
+const speakButton = document.querySelector("#speak-button");
 
 const summaryText = document.querySelector("#summary-text");
 const summaryTitle = document.querySelector("#summary-title");
@@ -152,9 +153,16 @@ function handleInputTextBlur() {
   }
 }
 
+function handleAudioButtonPress(){
+  var msg = new SpeechSynthesisUtterance();
+  msg.text = summaryText.innerText;
+  window.speechSynthesis.speak(msg);
+}
+
 summarizeForm.addEventListener("submit", handleFormSubmit);
 urlLink.addEventListener("click", handleUrlLinkClick);
 textLink.addEventListener("click", handleTextLinkClick);
 copyButton.addEventListener("click", handleCopyButtonClick);
 inputText.addEventListener("focus", handleInputTextFocus);
 inputText.addEventListener("blur", handleInputTextBlur);
+speakButton.addEventListener("click", handleAudioButtonPress);
