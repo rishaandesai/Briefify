@@ -21,44 +21,6 @@ function updateProgressBar(percent) {
 }
 
 function summarizeText(input) {
-  fetch(fetchUrl + "?url=" + input, {
-    method: "GET",
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    clearInterval(timerId); // clear the interval when the fetch request is successful
-    var date = new Date(data.date);
-    date = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    summaryText.innerHTML = 'Summary: ' + data.summary;
-    
-    // Check the input type and hide the corresponding elements if inputType is "text"
-    if (inputType.value === "text") {
-      summaryTitle.style.display = "none";
-      summaryDate.style.display = "none";
-      summaryAuthors.style.display = "none";
-      wordCountText.style.display = "none";
-    } else {
-      summaryTitle.innerHTML = data.title;
-      summaryDate.innerHTML = date;
-      const authors = data.authors.join(", ").replace(/,(?!.*,)/gmi, " and");
-      summaryAuthors.innerHTML = 'by' + authors;
-
-      if(data.authors.length === 0) {
-        summaryAuthors.style.display = "none";
-      }
-
-      const wordCount = data.summary.split(/\s+/).length;
-      wordCountText.innerHTML = "Word count: " + wordCount;
-    }
-    
-    progressBar.style.width = `${100}%`;
-    document.getElementsByClassName('progresstext')[0].innerHTML = `${100}%`;
-    progressBar.backgroundColor = "green";
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
-
   let max = Math.random() * 10 + 72;
   var progress = 0;
   const timerId = setInterval(() => {
@@ -76,10 +38,53 @@ function summarizeText(input) {
      progressBar.style.backgroundColor = "orange";
    }
    else{
-     progressBar.style.backgroundColor = "green";
+     progressBar.style.backgroundColor = "#1dd654";
    }
  }, 300);
+
+  fetch(fetchUrl + "?url=" + input, {
+    method: "GET",
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    clearInterval(timerId); // clear the interval when the fetch request is successful
+    var date = new Date(data.date);
+    date = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    summaryText.innerHTML = 'Summary: ' + data.summary;
+    const wordCount = data.summary.match(/\b\w+\b/gmi).length;
+    wordCountText.innerHTML = "Word count: " + wordCount;
+
+    // Check the input type and hide the corresponding elements if inputType is "text"
+    if (inputType.value === "text") {
+      summaryTitle.style.display = "none";
+      summaryDate.style.display = "none";
+      summaryAuthors.style.display = "none";
+    } else {
+      summaryTitle.innerHTML = data.title;
+      summaryDate.innerHTML = date;
+      const authors = data.authors.join(", ").replace(/,(?!.*,)/gmi, " and");
+      console.log(summaryAuthors.textContent)
+      if (summaryAuthors.textContent === "") {
+        summaryAuthors.style.display = "none";
+      } else {
+        summaryAuthors.innerHTML = 'by ' + authors;
+        summaryAuthors.style.display = "block";
+      }
+
+      if(data.authors.length === 0) {
+        summaryAuthors.style.display = "none";
+      }
+    }
+    
+    progressBar.style.width = "100%";
+    document.getElementsByClassName('progresstext')[0].innerHTML = "100%";
+    progressBar.style.backgroundColor = "#1dd654";
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
 }
+
 
 function handleFormSubmit(event) {
   event.preventDefault();

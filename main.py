@@ -52,7 +52,8 @@ def summarize():
         'original': text,
         'url': url,
         'title': title,
-         'date': date }
+         'date': date,
+          'authors': authors }
 
     # Set the Content-Type header to application/json
     headers = {'Content-Type': 'application/json'}
