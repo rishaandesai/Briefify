@@ -44,6 +44,7 @@ function summarizeText(input) {
     wordCountText.innerHTML = "Word count: " + wordCount;
     progressBar.style.width = `${100}%`;
     document.getElementsByClassName('progresstext')[0].innerHTML = `${100}%`;
+    progressBar.backgroundColor = "green";
   })
   .catch((error) => {
     console.error("Error:", error);
@@ -60,10 +61,10 @@ function summarizeText(input) {
      progressBar.style.backgroundColor = "red";
    }
    else if(progress<=50){
-     progressBar.style.backgroundColor = "orange";
+     progressBar.style.backgroundColor = "#f74231";
    }
    else if(progress<100){
-     progressBar.style.backgroundColor = "#f74231";
+     progressBar.style.backgroundColor = "orange";
    }
    else{
      progressBar.style.backgroundColor = "green";
