@@ -52,6 +52,7 @@ function summarizeText(input) {
     }
     
     progressBar.style.width = `${100}%`;
+    document.getElementsByClassName('progresstext')[0].innerHTML = `${100}%`;
   })
   .catch((error) => {
     console.error("Error:", error);
